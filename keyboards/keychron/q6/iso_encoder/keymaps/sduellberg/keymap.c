@@ -19,12 +19,13 @@
 #include QMK_KEYBOARD_H
 #define LYR_FN MO(LAYER_FUNCTIONS)
 #define LYR_MCR MO(LAYER_MACROS)
+#define CAPS
 
 // clang-format off
 
 enum layers{
   LAYER_BASE,
-  LAYER_TYPING,
+  LAYER_SPECIAL,
   LAYER_FUNCTIONS,
   LAYER_MACROS
 };
@@ -38,18 +39,18 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_CAPS,  KC_A,     KC_S,     KC_D,     KC_F,     KC_G,     KC_H,     KC_J,     KC_K,     KC_L,     KC_SCLN,  KC_QUOT,  KC_NUHS,    KC_ENT,                                 KC_P4,    KC_P5,    KC_P6,    KC_PPLS,
         KC_LSFT,  KC_NUBS,  KC_Z,     KC_X,     KC_C,     KC_V,     KC_B,     KC_N,     KC_M,     KC_COMM,  KC_DOT,        KC_SLSH,         KC_RSFT,            KC_UP,              KC_P1,    KC_P2,    KC_P3,
         KC_LCTL,  KC_LWIN,  KC_LALT,                                KC_SPC,                                 KC_RALT,  LYR_FN,   LYR_MCR,    KC_RCTL,  KC_LEFT, KC_DOWN, KC_RGHT,          KC_P0,        KC_PDOT,  KC_PENT),
-    [LAYER_TYPING] = LAYOUT_iso_110(
+    [LAYER_SPECIAL] = LAYOUT_iso_110(
         _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,    _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,
         _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,    _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,
         _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,              _______,  _______,  _______,  _______,  _______,  _______,
-        CW_TOGG,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,    _______,                                _______,  _______,  _______,  _______,
+        KC_NO,    _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,    _______,                                _______,  _______,  _______,  _______,
         _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,       _______,         _______,            _______,            _______,  _______,  _______,
         _______,  _______,  _______,                                _______,                                _______,  _______,  _______,    _______,  _______,  _______,  _______,       _______,       _______,  _______),
     [LAYER_FUNCTIONS] = LAYOUT_iso_110(
         _______,  KC_BRID,  KC_BRIU,  KC_CPNL,  KC_CALC,  RGB_VAD,  RGB_VAI,  KC_MPRV,  KC_MPLY,  KC_MNXT,  KC_MUTE,  KC_VOLD,  KC_VOLU,    RGB_TOG,  KC_SLEP,  _______,  RGB_MOD,  _______,  _______,  _______,  _______,
         _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,    _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,
         RGB_TOG,  RGB_MOD,  RGB_VAI,  RGB_HUI,  RGB_SAI,  RGB_SPI,  _______,  _______,  _______,  _______,  _______,  _______,  _______,              _______,  _______,  _______,  _______,  _______,  _______,
-        _______,  RGB_RMOD, RGB_VAD,  RGB_HUD,  RGB_SAD,  RGB_SPD,  _______,  _______,  _______,  _______,  _______,  _______,  _______,    _______,                                _______,  _______,  _______,  _______,
+        CW_TOGG,  RGB_RMOD, RGB_VAD,  RGB_HUD,  RGB_SAD,  RGB_SPD,  _______,  _______,  _______,  _______,  _______,  _______,  _______,    _______,                                _______,  _______,  _______,  _______,
         _______,  _______,  _______,  _______,  _______,  _______,  _______,  NK_TOGG,  _______,  _______,  _______,       _______,         _______,            _______,            _______,  _______,  _______,
         _______,  _______,  _______,                                _______,                                _______,  _______,  _______,    _______,  _______,  _______,  _______,       _______,       _______,  _______),
     [LAYER_MACROS] = LAYOUT_iso_110(
@@ -63,7 +64,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 const uint16_t PROGMEM encoder_map[][1][2] = {
     [LAYER_BASE] = {ENCODER_CCW_CW(KC_VOLD, KC_VOLU) },
-    [LAYER_TYPING] = {ENCODER_CCW_CW(_______, _______) },
+    [LAYER_SPECIAL] = {ENCODER_CCW_CW(_______, _______) },
     [LAYER_FUNCTIONS] = {ENCODER_CCW_CW(RGB_VAD, RGB_VAI) },
     [LAYER_MACROS] = {ENCODER_CCW_CW(_______, _______) },
 };
@@ -71,11 +72,11 @@ const uint16_t PROGMEM encoder_map[][1][2] = {
 bool dip_switch_update_user(uint8_t index, bool active) {
     if(active)
     {
-        set_single_persistent_default_layer(LAYER_TYPING);
+        set_single_persistent_default_layer(LAYER_SPECIAL);
     }
     else
     {
         set_single_persistent_default_layer(LAYER_BASE);
     }
-    return true; // always skip default handling
+    return false; // always skip default handling
 }
