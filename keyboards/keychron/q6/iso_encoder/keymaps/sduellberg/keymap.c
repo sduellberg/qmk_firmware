@@ -17,10 +17,13 @@
 /*
 *   Keycodes: https://docs.qmk.fm/#/keycodes
 *
-*   Versions:
+*   Git tagging:
 *       git tag sduellberg-v1.0 HEAD -m "*MESSAGE*"
 *       git push origin sduellberg-v1.0
+*
 *       git tag -l 'sduellberg-v*'
+*
+*       git tag -d sduellberg-v1.0
 */
 
 #include QMK_KEYBOARD_H
