@@ -14,7 +14,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-// https://docs.qmk.fm/#/keycodes
+/*
+*   Keycodes: https://docs.qmk.fm/#/keycodes
+*
+*   Versions: git tag -l 'sduellberg-v*'
+*/
 
 #include QMK_KEYBOARD_H
 #define LYR_FN MO(LAYER_FUNCTIONS)
