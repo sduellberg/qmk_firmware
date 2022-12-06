@@ -17,7 +17,10 @@
 /*
 *   Keycodes: https://docs.qmk.fm/#/keycodes
 *
-*   Versions: git tag -l 'sduellberg-v*'
+*   Versions:
+*       git tag sduellberg-v1.0 HEAD -m "*MESSAGE*"
+*       git push origin sduellberg-v1.0
+*       git tag -l 'sduellberg-v*'
 */
 
 #include QMK_KEYBOARD_H
