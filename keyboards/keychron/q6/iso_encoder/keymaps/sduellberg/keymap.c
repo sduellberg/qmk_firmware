@@ -17,7 +17,7 @@
 /*
 *   Keycodes: https://docs.qmk.fm/#/keycodes
 *
-*   Git tagging:
+*   Git tagging (last used version will be in this comment):
 *       (LISTING)
 *       git tag -l 'sduellberg-v*'
 *
@@ -26,14 +26,13 @@
 *       git push origin sduellberg-v1.1
 *
 *       (DELETION)
-*       git tag -d sduellberg-v1.0
-*       git push origin :sduellberg-v1.0
+*       git tag -d sduellberg-vx.x
+*       git push origin :sduellberg-vx.x
 *
 *   TODOS:
 *       - LED override for FN and macro layers
 *       - Map RGB effects to numbers and use indicators
 *       - Custom key for "KeepMeAlive" using deferred execution + indicator
-*       - Move keymaps for rgb control to the numpad
 *
 */
 
