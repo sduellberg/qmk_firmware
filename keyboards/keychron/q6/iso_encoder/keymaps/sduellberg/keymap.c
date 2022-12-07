@@ -22,15 +22,23 @@
 *       git tag -l 'sduellberg-v*'
 *
 *       (CREATION)
-*       git tag sduellberg-v1.0 HEAD -m "*MESSAGE*"
-*       git push origin sduellberg-v1.0
+*       git tag sduellberg-v1.1 HEAD -m "*MESSAGE*"
+*       git push origin sduellberg-v1.1
 *
 *       (DELETION)
 *       git tag -d sduellberg-v1.0
 *       git push origin :sduellberg-v1.0
+*
+*   TODOS:
+*       - LED override for FN and macro layers
+*       - Map RGB effects to numbers and use indicators
+*       - Custom key for "KeepMeAlive" using deferred execution + indicator
+*       - Move keymaps for rgb control to the numpad
+*
 */
 
 #include QMK_KEYBOARD_H
+#define ___ KC_NO
 #define LYR_FN MO(LAYER_FUNCTIONS)
 #define LYR_MCR MO(LAYER_MACROS)
 #define CAPS
@@ -61,26 +69,26 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,        _______,                   _______,              _______,  _______,  _______,
         _______,  _______,  _______,                                _______,                                _______,  _______,  _______,   _______,    _______,  _______,  _______,         _______,       _______,  _______),
     [LAYER_FUNCTIONS] = LAYOUT_iso_110(
-        _______,  KC_BRID,  KC_BRIU,  KC_CPNL,  KC_CALC,  RGB_VAD,  RGB_VAI,  KC_MPRV,  KC_MPLY,  KC_MNXT,  KC_MUTE,  KC_VOLD,  KC_VOLU,   RGB_TOG,    KC_SLEP,  _______,  RGB_MOD,    _______,  _______,  _______,  _______,
-        _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,   _______,    _______,  _______,  KC_WH_U,    _______,  _______,  _______,  _______,
-        RGB_TOG,  _______,  _______,  RGB_HUI,  RGB_SAI,  RGB_SPI,  _______,  _______,  _______,  _______,  _______,  _______,  _______,               _______,  _______,  KC_WH_D,    _______,  _______,  _______,
-        CW_TOGG,  _______,  _______,  RGB_HUD,  RGB_SAD,  RGB_SPD,  _______,  _______,  _______,  _______,  _______,  _______,  _______,   KC_BTN1,                                    _______,  _______,  _______,  _______,
-        _______,  _______,  _______,  _______,  _______,  _______,  _______,  NK_TOGG,  _______,  _______,  _______,  _______,        KC_BTN2,                   KC_MS_U,              _______,  _______,  _______,
-        _______,  _______,  _______,                                _______,                                _______,  _______,  _______,   _______,    KC_MS_L,  KC_MS_D,  KC_MS_R,         _______,       _______,  _______),
+        XXXXXXX,  KC_BRID,  KC_BRIU,  KC_CPNL,  KC_CALC,  RGB_VAD,  RGB_VAI,  KC_MPRV,  KC_MPLY,  KC_MNXT,  KC_MUTE,  KC_VOLD,  KC_VOLU,   RGB_TOG,    KC_SLEP,  XXXXXXX,  RGB_MOD,    DM_REC1,  DM_REC2,  XXXXXXX,  QK_LOCK,
+        XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,   XXXXXXX,    XXXXXXX,  XXXXXXX,  KC_WH_U,    XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,
+        RGB_TOG,  XXXXXXX,  XXXXXXX,  RGB_HUI,  RGB_SAI,  RGB_SPI,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,               XXXXXXX,  XXXXXXX,  KC_WH_D,    XXXXXXX,  XXXXXXX,  XXXXXXX,
+        CW_TOGG,  XXXXXXX,  XXXXXXX,  RGB_HUD,  RGB_SAD,  RGB_SPD,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,   KC_BTN1,                                    XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,
+        XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  NK_TOGG,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,        KC_BTN2,                   KC_MS_U,              XXXXXXX,  XXXXXXX,  XXXXXXX,
+        XXXXXXX,  XXXXXXX,  XXXXXXX,                                XXXXXXX,                                XXXXXXX,  XXXXXXX,  XXXXXXX,   XXXXXXX,    KC_MS_L,  KC_MS_D,  KC_MS_R,         XXXXXXX,       XXXXXXX,  XXXXXXX),
     [LAYER_MACROS] = LAYOUT_iso_110(
-        DM_RSTP,  KC_F13,   KC_F14,   KC_F15,   KC_F16,   KC_F17,   KC_F18,   KC_F19,   KC_F20,   KC_F21,   KC_F22,   KC_F23,   KC_F24,    _______,    _______,  _______,  _______,    DM_REC1,  DM_REC2,  _______,  QK_LOCK,
-        _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,   _______,    _______,  _______,  _______,    _______,  _______,  _______,  _______,
-        _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,               _______,  _______,  _______,    _______,  _______,  _______,
-        _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,   _______,                                    _______,  _______,  _______,  _______,
-        _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,        _______,                   _______,              _______,  _______,  _______,
-        _______,  _______,  _______,                                _______,                                _______,  _______,  _______,   _______,    _______,  _______,  _______,         _______,       _______,  _______),
+        DM_RSTP,  KC_F13,   KC_F14,   KC_F15,   KC_F16,   KC_F17,   KC_F18,   KC_F19,   KC_F20,   KC_F21,   KC_F22,   KC_F23,   KC_F24,    XXXXXXX,    XXXXXXX,  XXXXXXX,  XXXXXXX,    XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,
+        XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,   XXXXXXX,    XXXXXXX,  XXXXXXX,  XXXXXXX,    XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,
+        XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,               XXXXXXX,  XXXXXXX,  XXXXXXX,    XXXXXXX,  XXXXXXX,  XXXXXXX,
+        XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,   XXXXXXX,                                    XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,
+        XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,        XXXXXXX,                   XXXXXXX,              XXXXXXX,  XXXXXXX,  XXXXXXX,
+        XXXXXXX,  XXXXXXX,  XXXXXXX,                                XXXXXXX,                                XXXXXXX,  XXXXXXX,  XXXXXXX,   XXXXXXX,    XXXXXXX,  XXXXXXX,  XXXXXXX,         XXXXXXX,       XXXXXXX,  XXXXXXX),
 };
 
 const uint16_t PROGMEM encoder_map[][1][2] = {
     [LAYER_BASE] = {ENCODER_CCW_CW(KC_VOLD, KC_VOLU) },
     [LAYER_SPECIAL] = {ENCODER_CCW_CW(_______, _______) },
     [LAYER_FUNCTIONS] = {ENCODER_CCW_CW(RGB_VAD, RGB_VAI) },
-    [LAYER_MACROS] = {ENCODER_CCW_CW(_______, _______) },
+    [LAYER_MACROS] = {ENCODER_CCW_CW(XXXXXXX, XXXXXXX) },
 };
 
 bool dip_switch_update_user(uint8_t index, bool active) {
