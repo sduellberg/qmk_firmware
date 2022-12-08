@@ -60,7 +60,7 @@
 
 // clang-format off
 
-deferred_token keep_awake_token = NULL;
+deferred_token keep_awake_token = '\0';
 
 enum my_keycodes {
   SD_WAKE = SAFE_RANGE,
@@ -118,7 +118,7 @@ uint32_t keep_awake(uint32_t trigger_time, void *cb_arg) {
     tap_code(KC_BRIU);
 
     // setup next execution
-    return keep_awake_token != NULL ? KEEP_AWAKE_INTERVAL_MS : 0;
+    return keep_awake_token != '\0' ? KEEP_AWAKE_INTERVAL_MS : 0;
 }
 
 
@@ -141,10 +141,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         // activate keep awake deferred execution
         keep_awake_token = defer_exec(KEEP_AWAKE_INTERVAL_MS, keep_awake, NULL);
       }
-      else if(keep_awake_token != NULL){
+      else if(keep_awake_token != '\0'){
         // deactivate deferred execution
         cancel_deferred_exec(keep_awake_token);
-        keep_awake_token = NULL;
+        keep_awake_token = '\0';
       }
       return false; // Skip all further processing of this key
     default:
