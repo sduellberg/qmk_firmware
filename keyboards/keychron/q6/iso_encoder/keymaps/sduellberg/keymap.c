@@ -22,8 +22,8 @@
  *       git tag -l 'sduellberg-v*'
  *
  *       (CREATION)
- *       git tag sduellberg-v1.1 HEAD -m "*MESSAGE*"
- *       git push origin sduellberg-v1.1
+ *       git tag sduellberg-v2.0 HEAD -m "*MESSAGE*"
+ *       git push origin sduellberg-v2.0
  *
  *       (DELETION)
  *       git tag -d sduellberg-vx.x
@@ -128,7 +128,7 @@ uint32_t keep_awake(uint32_t trigger_time, void *cb_arg) {
 bool dip_switch_update_user(uint8_t index, bool active) {
     if(active)
     {
-      dprint("DIP event: Switching to SPECIAL layer.")
+      dprint("DIP event: Switching to SPECIAL layer.");
       set_single_persistent_default_layer(LAYER_SPECIAL);
     }
     else
