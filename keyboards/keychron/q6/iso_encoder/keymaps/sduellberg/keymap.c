@@ -50,6 +50,7 @@
 *           (https://docs.qmk.fm/#/feature_macros?id=using-macros-in-c-keymaps)
 *       - RAW HID companion for additional functionality?
 *           (https://docs.qmk.fm/#/feature_rawhid)
+*       - Indicators and effects for dynamic macros?
 *
 */
 
