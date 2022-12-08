@@ -19,7 +19,7 @@
  *
  *   Git tagging (last used version will be in this comment):
  *       (LISTING)
- *       git tag -l 'sduellberg-v*'
+ *       git tag -n3 -l 'sduellberg-v*'
  *
  *       (CREATION)
  *       git tag sduellberg-v2.0 HEAD -m "*MESSAGE*"
@@ -95,8 +95,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         QK_BOOT,  KC_BRID,  KC_BRIU,  KC_CPNL,  KC_CALC,  RGB_VAD,  RGB_VAI,  KC_MPRV,  KC_MPLY,  KC_MNXT,  KC_MUTE,  KC_VOLD,  KC_VOLU,   RGB_TOG,    KC_SLEP,  XXXXXXX,  RGB_MOD,    DM_REC1,  DM_REC2,  QK_LOCK,  SD_WAKE,
         XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,   XXXXXXX,    XXXXXXX,  XXXXXXX,  KC_WH_U,    XXXXXXX,  RGB_RMOD, RGB_MOD,  RGB_SPD,
         RGB_TOG,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,               XXXXXXX,  XXXXXXX,  KC_WH_D,    XXXXXXX,  RGB_HUI,  XXXXXXX,
-        CW_TOGG,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,   KC_BTN1,                                    RGB_SAD,  XXXXXXX,  RGB_SAI,  RGB_SPI,
-        XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  DB_TOGG,  NK_TOGG,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,        KC_BTN2,                   KC_MS_U,              XXXXXXX,  RGB_HUD,  XXXXXXX,
+        CW_TOGG,  XXXXXXX,  XXXXXXX,  DB_TOGG,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,   KC_BTN1,                                    RGB_SAD,  XXXXXXX,  RGB_SAI,  RGB_SPI,
+        XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  NK_TOGG,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,        KC_BTN2,                   KC_MS_U,              XXXXXXX,  RGB_HUD,  XXXXXXX,
         XXXXXXX,  XXXXXXX,  XXXXXXX,                                XXXXXXX,                                XXXXXXX,  XXXXXXX,  XXXXXXX,   XXXXXXX,    KC_MS_L,  KC_MS_D,  KC_MS_R,         XXXXXXX,       RGB_TOG,  XXXXXXX),
     [LAYER_MACROS] = LAYOUT_iso_110(
         DM_RSTP,  KC_F13,   KC_F14,   KC_F15,   KC_F16,   KC_F17,   KC_F18,   KC_F19,   KC_F20,   KC_F21,   KC_F22,   KC_F23,   KC_F24,    XXXXXXX,    XXXXXXX,  XXXXXXX,  XXXXXXX,    XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,
