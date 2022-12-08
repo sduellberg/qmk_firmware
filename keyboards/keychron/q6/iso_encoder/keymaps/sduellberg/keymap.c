@@ -33,13 +33,23 @@
 *       - LED override for FN and macro layers
 *       - Map RGB effects to numbers and use indicators
 *       - Custom key for "KeepMeAlive" using deferred execution + indicator
+*           (https://docs.qmk.fm/#/custom_quantum_functions?id=deferred-execution)
+*           (https://docs.qmk.fm/#/feature_rgb_matrix?id=indicators)
+*           (https://docs.qmk.fm/#/feature_macros?id=advanced-macros)
+*           (https://docs.qmk.fm/#/feature_macros?id=super-alt%e2%86%aftab)
 *       - Clean up unwanted RGB effects.
 *       - Add forward / backward rgb effect modifier to the numpad.
 *       - Increase the "cooldown" time of the rgb effect.
 *       - Check out the console feature.
+*           (https://docs.qmk.fm/#/cli_commands?id=qmk-console)
 *       - Check if there is an rgb effect for the keyboard going to sleep.
-*       - Add boot keybinding to functions layer.
+*           (https://docs.qmk.fm/#/custom_quantum_functions?id=keyboard-idlingwake-code)
+*       - Add boot + debug keybinding to functions layer.
 *       - Add functionality for rectangle and cross in default layer.
+*           (https://docs.qmk.fm/#/feature_send_string?id=send_stringstring)
+*           (https://docs.qmk.fm/#/feature_macros?id=using-macros-in-c-keymaps)
+*       - RAW HID companion for additional functionality?
+*           (https://docs.qmk.fm/#/feature_rawhid)
 *
 */
 
