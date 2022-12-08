@@ -29,6 +29,10 @@
  *       git tag -d sduellberg-vx.x
  *       git push origin :sduellberg-vx.x
  *
+ *    Console logging:
+ *      (All messages need to end wit a newline or they will not be displayed!)
+ *      qmk console -t
+ *
  *   TODOs:
  *       - LED override for FN and macro layers
  *       - Map additional layers to numbers and use indicators
@@ -117,7 +121,7 @@ const uint16_t PROGMEM encoder_map[][1][2] = {
 
 /// @brief Keep the computer awake by sending a key event every minute
 uint32_t keep_awake(uint32_t trigger_time, void *cb_arg) {
-    dprint("keep_awake: Sending keycode.");
+    dprint("keep_awake: Sending keycode.\n");
     tap_code(KC_BRIU);
 
     // setup next execution
@@ -128,12 +132,12 @@ uint32_t keep_awake(uint32_t trigger_time, void *cb_arg) {
 bool dip_switch_update_user(uint8_t index, bool active) {
     if(active)
     {
-      dprint("DIP event: Switching to SPECIAL layer.");
+      dprint("DIP event: Switching to SPECIAL layer.\n");
       set_single_persistent_default_layer(LAYER_SPECIAL);
     }
     else
     {
-      dprint("DIP event: Switching to BASE layer.");
+      dprint("DIP event: Switching to BASE layer.\n");
       set_single_persistent_default_layer(LAYER_BASE);
     }
     return false; // always skip default handling
@@ -146,13 +150,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       {
         if(keep_awake_token != '\0'){
           // deactivate deferred execution
-          dprint("Ending keep_awake.");
+          dprint("Ending keep_awake.\n");
           cancel_deferred_exec(keep_awake_token);
           keep_awake_token = '\0';
         }
         else{
           // activate keep awake deferred execution
-          dprint("Starting keep_awake.");
+          dprint("Starting keep_awake.\n");
           keep_awake_token = defer_exec(KEEP_AWAKE_INTERVAL_MS, keep_awake, NULL);
         }
       }
