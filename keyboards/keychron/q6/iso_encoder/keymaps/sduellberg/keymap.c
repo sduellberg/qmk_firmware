@@ -38,6 +38,7 @@
 *       - Increase the "cooldown" time of the rgb effect.
 *       - Check out the console feature.
 *       - Check if there is an rgb effect for the keyboard going to sleep.
+*       - Add boot keybinding to functions layer.
 *
 */
 
