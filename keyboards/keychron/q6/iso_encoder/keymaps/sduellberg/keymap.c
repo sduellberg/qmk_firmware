@@ -33,6 +33,10 @@
 *       - LED override for FN and macro layers
 *       - Map RGB effects to numbers and use indicators
 *       - Custom key for "KeepMeAlive" using deferred execution + indicator
+*       - Clean up unwanted RGB effects.
+*       - Add forward / backward rgb effect modifier to the numpad.
+*       - Increase the "cooldown" time of the rgb effect.
+*       - Check out the console feature.
 *
 */
 
