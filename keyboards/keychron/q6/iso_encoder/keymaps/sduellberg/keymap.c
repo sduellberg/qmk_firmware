@@ -29,7 +29,7 @@
 *       git tag -d sduellberg-vx.x
 *       git push origin :sduellberg-vx.x
 *
-*   TODOS:
+*   TODOs:
 *       - LED override for FN and macro layers
 *       - Map RGB effects to numbers and use indicators
 *       - Custom key for "KeepMeAlive" using deferred execution + indicator
@@ -58,9 +58,11 @@
 #include QMK_KEYBOARD_H
 #define LYR_FN MO(LAYER_FUNCTIONS)
 #define LYR_MCR MO(LAYER_MACROS)
-#define CAPS
+#define KEEP_AWAKE_INTERVAL_MS 60000
 
 // clang-format off
+
+deferred_token keep_awake_token = NULL;
 
 enum my_keycodes {
   SD_WAKE = SAFE_RANGE,
@@ -90,7 +92,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,        _______,                   _______,              _______,  _______,  _______,
         _______,  _______,  _______,                                _______,                                _______,  _______,  _______,   _______,    _______,  _______,  _______,         _______,       _______,  _______),
     [LAYER_FUNCTIONS] = LAYOUT_iso_110(
-        XXXXXXX,  KC_BRID,  KC_BRIU,  KC_CPNL,  KC_CALC,  RGB_VAD,  RGB_VAI,  KC_MPRV,  KC_MPLY,  KC_MNXT,  KC_MUTE,  KC_VOLD,  KC_VOLU,   RGB_TOG,    KC_SLEP,  XXXXXXX,  RGB_MOD,    DM_REC1,  DM_REC2,  SD_WAKE,  QK_LOCK,
+        XXXXXXX,  KC_BRID,  KC_BRIU,  KC_CPNL,  KC_CALC,  RGB_VAD,  RGB_VAI,  KC_MPRV,  KC_MPLY,  KC_MNXT,  KC_MUTE,  KC_VOLD,  KC_VOLU,   RGB_TOG,    KC_SLEP,  XXXXXXX,  RGB_MOD,    DM_REC1,  DM_REC2,  QK_LOCK,  SD_WAKE,
         XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,   XXXXXXX,    XXXXXXX,  XXXXXXX,  KC_WH_U,    XXXXXXX,  XXXXXXX,  XXXXXXX,  RGB_SPD,
         RGB_TOG,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,               XXXXXXX,  XXXXXXX,  KC_WH_D,    XXXXXXX,  RGB_HUI,  XXXXXXX,
         CW_TOGG,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,   KC_BTN1,                                    RGB_SAD,  XXXXXXX,  RGB_SAI,  RGB_SPI,
@@ -112,6 +114,16 @@ const uint16_t PROGMEM encoder_map[][1][2] = {
     [LAYER_MACROS] = {ENCODER_CCW_CW(XXXXXXX, XXXXXXX) },
 };
 
+
+/// @brief Keep the computer awake by sending a key event every minute
+uint32_t keep_awake(uint32_t trigger_time, void *cb_arg) {
+    tap_code(KC_BRIU);
+
+    // setup next execution
+    return keep_awake_token != NULL ? KEEP_AWAKE_INTERVAL_MS : 0;
+}
+
+
 bool dip_switch_update_user(uint8_t index, bool active) {
     if(active)
     {
@@ -129,7 +141,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     case SD_WAKE:
       if (record->event.pressed) {
         // activate keep awake deferred execution
-
+        keep_awake_token = defer_exec(KEEP_AWAKE_INTERVAL_MS, keep_awake, NULL);
+      }
+      else if(keep_awake_token != NULL){
+        // deactivate deferred execution
+        cancel_deferred_exec(keep_awake_token);
+        keep_awake_token = NULL;
       }
       return false; // Skip all further processing of this key
     default:
