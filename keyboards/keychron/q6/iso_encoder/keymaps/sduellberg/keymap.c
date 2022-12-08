@@ -15,45 +15,47 @@
  */
 
 /*
-*   Keycodes: https://docs.qmk.fm/#/keycodes
-*
-*   Git tagging (last used version will be in this comment):
-*       (LISTING)
-*       git tag -l 'sduellberg-v*'
-*
-*       (CREATION)
-*       git tag sduellberg-v1.1 HEAD -m "*MESSAGE*"
-*       git push origin sduellberg-v1.1
-*
-*       (DELETION)
-*       git tag -d sduellberg-vx.x
-*       git push origin :sduellberg-vx.x
-*
-*   TODOs:
-*       - LED override for FN and macro layers
-*       - Map additional layers to numbers and use indicators
-*       - Custom key for "KeepMeAlive" using deferred execution + indicator
-*           (https://docs.qmk.fm/#/custom_quantum_functions?id=deferred-execution)
-*           (https://docs.qmk.fm/#/feature_rgb_matrix?id=indicators)
-*           (https://docs.qmk.fm/#/feature_macros?id=advanced-macros)
-*           (https://docs.qmk.fm/#/feature_macros?id=super-alt%e2%86%aftab)
-*       - Clean up unwanted RGB effects.
-*       - Increase the "cooldown" time of the rgb effect.
-*       - Check out the console feature.
-*           (https://docs.qmk.fm/#/cli_commands?id=qmk-console)
-*       - Check if there is an rgb effect for the keyboard going to sleep.
-*           (https://docs.qmk.fm/#/custom_quantum_functions?id=keyboard-idlingwake-code)
-*       - Add functionality for rectangle and cross in default layer.
-*           (https://docs.qmk.fm/#/feature_send_string?id=send_stringstring)
-*           (https://docs.qmk.fm/#/feature_macros?id=using-macros-in-c-keymaps)
-*       - RAW HID companion for additional functionality?
-*           (https://docs.qmk.fm/#/feature_rawhid)
-*       - Indicators and effects for dynamic macros?
-*       - Is it possible to cancel all currently locked keys (QK_LOCK)?
-*
-*/
+ *   Keycodes: https://docs.qmk.fm/#/keycodes
+ *
+ *   Git tagging (last used version will be in this comment):
+ *       (LISTING)
+ *       git tag -l 'sduellberg-v*'
+ *
+ *       (CREATION)
+ *       git tag sduellberg-v1.1 HEAD -m "*MESSAGE*"
+ *       git push origin sduellberg-v1.1
+ *
+ *       (DELETION)
+ *       git tag -d sduellberg-vx.x
+ *       git push origin :sduellberg-vx.x
+ *
+ *   TODOs:
+ *       - LED override for FN and macro layers
+ *       - Map additional layers to numbers and use indicators
+ *       - Custom key for "KeepMeAlive" using deferred execution + indicator
+ *           (https://docs.qmk.fm/#/custom_quantum_functions?id=deferred-execution)
+ *           (https://docs.qmk.fm/#/feature_rgb_matrix?id=indicators)
+ *           (https://docs.qmk.fm/#/feature_macros?id=advanced-macros)
+ *           (https://docs.qmk.fm/#/feature_macros?id=super-alt%e2%86%aftab)
+ *       - Clean up unwanted RGB effects.
+ *       - Increase the "cooldown" time of the rgb effect.
+ *       - Check out the console feature.
+ *           (https://docs.qmk.fm/#/cli_commands?id=qmk-console)
+ *       - Check if there is an rgb effect for the keyboard going to sleep.
+ *           (https://docs.qmk.fm/#/custom_quantum_functions?id=keyboard-idlingwake-code)
+ *       - Add functionality for rectangle and cross in default layer.
+ *           (https://docs.qmk.fm/#/feature_send_string?id=send_stringstring)
+ *           (https://docs.qmk.fm/#/feature_macros?id=using-macros-in-c-keymaps)
+ *       - RAW HID companion for additional functionality?
+ *           (https://docs.qmk.fm/#/feature_rawhid)
+ *       - Indicators and effects for dynamic macros?
+ *       - Is it possible to cancel all currently locked keys (QK_LOCK)?
+ *
+ */
 
 #include QMK_KEYBOARD_H
+#include "print.h"
+
 #define LYR_FN MO(LAYER_FUNCTIONS)
 #define LYR_MCR MO(LAYER_MACROS)
 #define KEEP_AWAKE_INTERVAL_MS 60000
@@ -115,6 +117,7 @@ const uint16_t PROGMEM encoder_map[][1][2] = {
 
 /// @brief Keep the computer awake by sending a key event every minute
 uint32_t keep_awake(uint32_t trigger_time, void *cb_arg) {
+    dprint("keep_awake: Sending keycode.");
     tap_code(KC_BRIU);
 
     // setup next execution
@@ -125,11 +128,13 @@ uint32_t keep_awake(uint32_t trigger_time, void *cb_arg) {
 bool dip_switch_update_user(uint8_t index, bool active) {
     if(active)
     {
-        set_single_persistent_default_layer(LAYER_SPECIAL);
+      dprint("DIP event: Switching to SPECIAL layer.")
+      set_single_persistent_default_layer(LAYER_SPECIAL);
     }
     else
     {
-        set_single_persistent_default_layer(LAYER_BASE);
+      dprint("DIP event: Switching to BASE layer.");
+      set_single_persistent_default_layer(LAYER_BASE);
     }
     return false; // always skip default handling
 }
@@ -137,14 +142,19 @@ bool dip_switch_update_user(uint8_t index, bool active) {
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
     case SD_WAKE:
-      if (record->event.pressed) {
-        // activate keep awake deferred execution
-        keep_awake_token = defer_exec(KEEP_AWAKE_INTERVAL_MS, keep_awake, NULL);
-      }
-      else if(keep_awake_token != '\0'){
-        // deactivate deferred execution
-        cancel_deferred_exec(keep_awake_token);
-        keep_awake_token = '\0';
+      if (record->event.pressed)
+      {
+        if(keep_awake_token != '\0'){
+          // deactivate deferred execution
+          dprint("Ending keep_awake.");
+          cancel_deferred_exec(keep_awake_token);
+          keep_awake_token = '\0';
+        }
+        else{
+          // activate keep awake deferred execution
+          dprint("Starting keep_awake.");
+          keep_awake_token = defer_exec(KEEP_AWAKE_INTERVAL_MS, keep_awake, NULL);
+        }
       }
       return false; // Skip all further processing of this key
     default:
