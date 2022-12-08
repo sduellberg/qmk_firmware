@@ -39,6 +39,7 @@
 *       - Check out the console feature.
 *       - Check if there is an rgb effect for the keyboard going to sleep.
 *       - Add boot keybinding to functions layer.
+*       - Add functionality for rectangle and cross in default layer.
 *
 */
 
