@@ -37,6 +37,7 @@
 *       - Add forward / backward rgb effect modifier to the numpad.
 *       - Increase the "cooldown" time of the rgb effect.
 *       - Check out the console feature.
+*       - Check if there is an rgb effect for the keyboard going to sleep.
 *
 */
 
