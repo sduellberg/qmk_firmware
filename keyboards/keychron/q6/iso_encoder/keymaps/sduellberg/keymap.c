@@ -31,20 +31,18 @@
 *
 *   TODOs:
 *       - LED override for FN and macro layers
-*       - Map RGB effects to numbers and use indicators
+*       - Map additional layers to numbers and use indicators
 *       - Custom key for "KeepMeAlive" using deferred execution + indicator
 *           (https://docs.qmk.fm/#/custom_quantum_functions?id=deferred-execution)
 *           (https://docs.qmk.fm/#/feature_rgb_matrix?id=indicators)
 *           (https://docs.qmk.fm/#/feature_macros?id=advanced-macros)
 *           (https://docs.qmk.fm/#/feature_macros?id=super-alt%e2%86%aftab)
 *       - Clean up unwanted RGB effects.
-*       - Add forward / backward rgb effect modifier to the numpad.
 *       - Increase the "cooldown" time of the rgb effect.
 *       - Check out the console feature.
 *           (https://docs.qmk.fm/#/cli_commands?id=qmk-console)
 *       - Check if there is an rgb effect for the keyboard going to sleep.
 *           (https://docs.qmk.fm/#/custom_quantum_functions?id=keyboard-idlingwake-code)
-*       - Add boot + debug keybinding to functions layer.
 *       - Add functionality for rectangle and cross in default layer.
 *           (https://docs.qmk.fm/#/feature_send_string?id=send_stringstring)
 *           (https://docs.qmk.fm/#/feature_macros?id=using-macros-in-c-keymaps)
@@ -78,7 +76,7 @@ enum layers{
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [LAYER_BASE] = LAYOUT_iso_110(
-        KC_ESC,   KC_F1,    KC_F2,    KC_F3,    KC_F4,    KC_F5,    KC_F6,    KC_F7,    KC_F8,    KC_F9,    KC_F10,   KC_F11,   KC_F12,    KC_MUTE,    KC_PSCR,  KC_LSCR,  KC_PAUS,    DM_PLY1,  DM_PLY2,  _______,  _______,
+        KC_ESC,   KC_F1,    KC_F2,    KC_F3,    KC_F4,    KC_F5,    KC_F6,    KC_F7,    KC_F8,    KC_F9,    KC_F10,   KC_F11,   KC_F12,    KC_MUTE,    KC_PSCR,  KC_LSCR,  KC_PAUS,    DM_PLY1,  DM_PLY2,  XXXXXXX,  XXXXXXX,
         KC_GRV,   KC_1,     KC_2,     KC_3,     KC_4,     KC_5,     KC_6,     KC_7,     KC_8,     KC_9,     KC_0,     KC_MINS,  KC_EQL,    KC_BSPC,    KC_INS,   KC_HOME,  KC_PGUP,    KC_NUM,   KC_PSLS,  KC_PAST,  KC_PMNS,
         KC_TAB,   KC_Q,     KC_W,     KC_E,     KC_R,     KC_T,     KC_Y,     KC_U,     KC_I,     KC_O,     KC_P,     KC_LBRC,  KC_RBRC,               KC_DEL,   KC_END,   KC_PGDN,    KC_P7,    KC_P8,    KC_P9,
         KC_CAPS,  KC_A,     KC_S,     KC_D,     KC_F,     KC_G,     KC_H,     KC_J,     KC_K,     KC_L,     KC_SCLN,  KC_QUOT,  KC_NUHS,   KC_ENT,                                     KC_P4,    KC_P5,    KC_P6,    KC_PPLS,
@@ -88,15 +86,15 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,   _______,    _______,  _______,  _______,    _______,  _______,  _______,  _______,
         _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,   _______,    _______,  _______,  _______,    _______,  _______,  _______,  _______,
         _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,               _______,  _______,  _______,    _______,  _______,  _______,
-        KC_NO,    _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,   _______,                                    _______,  _______,  _______,  _______,
+        XXXXXXX,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,   _______,                                    _______,  _______,  _______,  _______,
         _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,        _______,                   _______,              _______,  _______,  _______,
         _______,  _______,  _______,                                _______,                                _______,  _______,  _______,   _______,    _______,  _______,  _______,         _______,       _______,  _______),
     [LAYER_FUNCTIONS] = LAYOUT_iso_110(
-        XXXXXXX,  KC_BRID,  KC_BRIU,  KC_CPNL,  KC_CALC,  RGB_VAD,  RGB_VAI,  KC_MPRV,  KC_MPLY,  KC_MNXT,  KC_MUTE,  KC_VOLD,  KC_VOLU,   RGB_TOG,    KC_SLEP,  XXXXXXX,  RGB_MOD,    DM_REC1,  DM_REC2,  QK_LOCK,  SD_WAKE,
-        XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,   XXXXXXX,    XXXXXXX,  XXXXXXX,  KC_WH_U,    XXXXXXX,  XXXXXXX,  XXXXXXX,  RGB_SPD,
+        QK_BOOT,  KC_BRID,  KC_BRIU,  KC_CPNL,  KC_CALC,  RGB_VAD,  RGB_VAI,  KC_MPRV,  KC_MPLY,  KC_MNXT,  KC_MUTE,  KC_VOLD,  KC_VOLU,   RGB_TOG,    KC_SLEP,  XXXXXXX,  RGB_MOD,    DM_REC1,  DM_REC2,  QK_LOCK,  SD_WAKE,
+        XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,   XXXXXXX,    XXXXXXX,  XXXXXXX,  KC_WH_U,    XXXXXXX,  RGB_RMOD, RGB_MOD,  RGB_SPD,
         RGB_TOG,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,               XXXXXXX,  XXXXXXX,  KC_WH_D,    XXXXXXX,  RGB_HUI,  XXXXXXX,
         CW_TOGG,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,   KC_BTN1,                                    RGB_SAD,  XXXXXXX,  RGB_SAI,  RGB_SPI,
-        XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  NK_TOGG,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,        KC_BTN2,                   KC_MS_U,              XXXXXXX,  RGB_HUD,  XXXXXXX,
+        XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  DB_TOGG,  NK_TOGG,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,        KC_BTN2,                   KC_MS_U,              XXXXXXX,  RGB_HUD,  XXXXXXX,
         XXXXXXX,  XXXXXXX,  XXXXXXX,                                XXXXXXX,                                XXXXXXX,  XXXXXXX,  XXXXXXX,   XXXXXXX,    KC_MS_L,  KC_MS_D,  KC_MS_R,         XXXXXXX,       RGB_TOG,  XXXXXXX),
     [LAYER_MACROS] = LAYOUT_iso_110(
         DM_RSTP,  KC_F13,   KC_F14,   KC_F15,   KC_F16,   KC_F17,   KC_F18,   KC_F19,   KC_F20,   KC_F21,   KC_F22,   KC_F23,   KC_F24,    XXXXXXX,    XXXXXXX,  XXXXXXX,  XXXXXXX,    XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,
