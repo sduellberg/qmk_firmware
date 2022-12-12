@@ -22,8 +22,8 @@
  *       git tag -n3 -l 'sduellberg-v*'
  *
  *       (CREATION)
- *       git tag sduellberg-v3.0 HEAD -m "*MESSAGE*"
- *       git push origin sduellberg-v3.0
+ *       git tag sduellberg-v3.1 HEAD -m "*MESSAGE*"
+ *       git push origin sduellberg-v3.1
  *
  *       (DELETION)
  *       git tag -d sduellberg-vx.x
