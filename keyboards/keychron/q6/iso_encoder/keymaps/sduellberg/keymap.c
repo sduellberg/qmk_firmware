@@ -34,17 +34,15 @@
  *      qmk console -t
  *
  *   TODOs:
- *       - LED override for FN and macro layers (setup colors and fix illuminated keys when toggling the led feature)
- *       - Map additional layers to numbers and use indicators
+ *       - LED override for FN and macro layers (setup colors and fix illuminated keys when toggling the led feature, handle rgb effects hotkeys)
+ *       - Map additional (only macro?) layers to numbers and use indicators
  *       - Custom key for "KeepMeAlive" using deferred execution + indicator
  *           (https://docs.qmk.fm/#/custom_quantum_functions?id=deferred-execution)
  *           (https://docs.qmk.fm/#/feature_rgb_matrix?id=indicators)
  *           (https://docs.qmk.fm/#/feature_macros?id=advanced-macros)
  *           (https://docs.qmk.fm/#/feature_macros?id=super-alt%e2%86%aftab)
- *       - Clean up unwanted RGB effects.
- *       - Increase the "cooldown" time of the rgb effect.
- *       - Check out the console feature.
- *           (https://docs.qmk.fm/#/cli_commands?id=qmk-console)
+ *       - Decrease the "spread" of the heatmap effect.
+ *          - can the time of the red "hot" state be expanded while increasing the cooldown for the other phases?
  *       - Check if there is an rgb effect for the keyboard going to sleep.
  *           (https://docs.qmk.fm/#/custom_quantum_functions?id=keyboard-idlingwake-code)
  *       - Add functionality for rectangle and cross in default layer.
