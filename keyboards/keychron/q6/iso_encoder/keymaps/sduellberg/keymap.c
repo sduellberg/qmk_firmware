@@ -22,8 +22,8 @@
  *       git tag -n3 -l 'sduellberg-v*'
  *
  *       (CREATION)
- *       git tag sduellberg-v3.3 HEAD -m "*MESSAGE*"
- *       git push origin sduellberg-v3.3
+ *       git tag sduellberg-v3.4 HEAD -m "*MESSAGE*"
+ *       git push origin sduellberg-v3.4
  *
  *       (DELETION)
  *       git tag -d sduellberg-vx.x
@@ -181,18 +181,40 @@ bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
     return false;
   }
 
-  if (get_highest_layer(layer_state) > 0)
-  {
-    uint8_t layer = get_highest_layer(layer_state);
+  uint8_t layer = get_highest_layer(layer_state);
 
+  if (layer > LAYER_SPECIAL)
+  {
     for (uint8_t row = 0; row < MATRIX_ROWS; ++row)
     {
       for (uint8_t col = 0; col < MATRIX_COLS; ++col)
       {
         uint8_t index = g_led_config.matrix_co[row][col];
 
-        if (index >= led_min && index < led_max && index != NO_LED && keymap_key_to_keycode(layer, (keypos_t){col,row}) > KC_TRNS) {
-            rgb_matrix_set_color(index, RGB_WHITE);
+        if (index >= led_min && index < led_max && index != NO_LED) {
+          switch(keymap_key_to_keycode(layer, (keypos_t){col,row}))
+          {
+            case KC_NO:
+            case KC_TRANSPARENT:
+              break;
+            case KC_MS_UP ... KC_MS_ACCEL2:
+              rgb_matrix_set_color(index, RGB_ORANGE);
+              break;
+            case RGB_TOG ... RGB_MODE_TWINKLE:
+              rgb_matrix_set_color(index, RGB_GREEN);
+              break;
+            case NK_ON ... NK_TOGG:
+            case QK_BOOTLOADER ... QK_MAKE:
+              rgb_matrix_set_color(index, RGB_RED);
+              break;
+            case QK_LOCK:
+            case SD_WAKE ... SD_ULCK:
+              rgb_matrix_set_color(index, RGB_BLUE);
+              break;
+            default:
+              rgb_matrix_set_color(index, RGB_WHITE);
+              break;
+          }
         }
       }
     }
