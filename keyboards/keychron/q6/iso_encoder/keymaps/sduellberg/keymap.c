@@ -22,8 +22,8 @@
  *       git tag -n3 -l 'sduellberg-v*'
  *
  *       (CREATION)
- *       git tag sduellberg-v3.1 HEAD -m "*MESSAGE*"
- *       git push origin sduellberg-v3.1
+ *       git tag sduellberg-v3.2 HEAD -m "*MESSAGE*"
+ *       git push origin sduellberg-v3.2
  *
  *       (DELETION)
  *       git tag -d sduellberg-vx.x
@@ -52,6 +52,8 @@
  *           (https://docs.qmk.fm/#/feature_rawhid)
  *       - Indicators and effects for dynamic macros?
  *       - Is it possible to cancel all currently locked keys (QK_LOCK)?
+ *          (https://docs.qmk.fm/#/feature_macros?id=clear_keyboard)
+ *          END-Key
  *
  */
 
@@ -65,9 +67,11 @@
 // clang-format off
 
 deferred_token keep_awake_token = '\0';
+bool overrideIndicators = false;
 
 enum my_keycodes {
-  SD_WAKE = SAFE_RANGE,
+  SD_WAKE = SAFE_RANGE, // Keep awake
+  SD_ULCK, // unlock all keys
 };
 
 enum layers{
@@ -159,25 +163,54 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         }
       }
       return false; // Skip all further processing of this key
+      case RGB_TOG ... RGB_MODE_TWINKLE:
+        if(!overrideIndicators)
+        {
+          overrideIndicators = true;
+          rgb_matrix_reload_from_eeprom(); // undo the temporary setting from layer_state_set_user
+        }
+        return true;
     default:
       return true; // Process all other keycodes normally
   }
 }
 
 bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
-  if (get_highest_layer(layer_state) > 0) {
-      uint8_t layer = get_highest_layer(layer_state);
-
-      for (uint8_t row = 0; row < MATRIX_ROWS; ++row) {
-          for (uint8_t col = 0; col < MATRIX_COLS; ++col) {
-              uint8_t index = g_led_config.matrix_co[row][col];
-
-              if (index >= led_min && index < led_max && index != NO_LED &&
-              keymap_key_to_keycode(layer, (keypos_t){col,row}) > KC_TRNS) {
-                  rgb_matrix_set_color(index, RGB_WHITE);
-              }
-          }
-      }
+  if(overrideIndicators)
+  {
+    return false;
   }
-  return false;
+
+  if (get_highest_layer(layer_state) > 0)
+  {
+    uint8_t layer = get_highest_layer(layer_state);
+
+    for (uint8_t row = 0; row < MATRIX_ROWS; ++row)
+    {
+      for (uint8_t col = 0; col < MATRIX_COLS; ++col)
+      {
+        uint8_t index = g_led_config.matrix_co[row][col];
+
+        if (index >= led_min && index < led_max && index != NO_LED && keymap_key_to_keycode(layer, (keypos_t){col,row}) > KC_TRNS) {
+            rgb_matrix_set_color(index, RGB_WHITE);
+        }
+      }
+    }
+  }
+
+  return true;
+}
+
+layer_state_t layer_state_set_user(layer_state_t state) {
+    switch (get_highest_layer(state)) {
+      case LAYER_FUNCTIONS ... LAYER_MACROS:
+        rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR);
+        rgb_matrix_sethsv_noeeprom(HSV_OFF);
+        break;
+      default: //  for any other layers, or the default layer reactivate rgb effects
+        rgb_matrix_reload_from_eeprom();
+        overrideIndicators=false;
+        break;
+    }
+  return state;
 }
