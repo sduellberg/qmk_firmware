@@ -22,8 +22,8 @@
  *       git tag -n3 -l 'sduellberg-v*'
  *
  *       (CREATION)
- *       git tag sduellberg-v3.4 HEAD -m "*MESSAGE*"
- *       git push origin sduellberg-v3.4
+ *       git tag sduellberg-v3.5 HEAD -m "*MESSAGE*"
+ *       git push origin sduellberg-v3.5
  *
  *       (DELETION)
  *       git tag -d sduellberg-vx.x
@@ -36,16 +36,12 @@
  *   TODOs:
  *       - Map additional (only macro?) layers to numbers and use indicators
  *          - implement some form of indicator spelling for identification?
- *       - Custom key for "KeepMeAlive" using deferred execution + indicator
- *           (https://docs.qmk.fm/#/custom_quantum_functions?id=deferred-execution)
- *           (https://docs.qmk.fm/#/feature_rgb_matrix?id=indicators)
- *           (https://docs.qmk.fm/#/feature_macros?id=advanced-macros)
- *           (https://docs.qmk.fm/#/feature_macros?id=super-alt%e2%86%aftab)
  *       - Check if there is an rgb effect for the keyboard going to sleep.
  *           (https://docs.qmk.fm/#/custom_quantum_functions?id=keyboard-idlingwake-code)
  *       - Add functionality for rectangle and cross in default layer.
  *           (https://docs.qmk.fm/#/feature_send_string?id=send_stringstring)
  *           (https://docs.qmk.fm/#/feature_macros?id=using-macros-in-c-keymaps)
+ *            Tap-dance like WIN+V insertions?
  *       - RAW HID companion for additional functionality?
  *           (https://docs.qmk.fm/#/feature_rawhid)
  *       - Indicators and effects for dynamic macros?
@@ -58,6 +54,7 @@
 #define LYR_FN MO(LAYER_FUNCTIONS)
 #define LYR_MCR MO(LAYER_MACROS)
 #define KEEP_AWAKE_INTERVAL_MS 60000
+#define KEEP_AWAKE_LED_INDEX 19
 
 // clang-format off
 
@@ -93,7 +90,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,        _______,                   _______,              _______,  _______,  _______,
         _______,  _______,  _______,                                _______,                                _______,  _______,  _______,   _______,    _______,  _______,  _______,         _______,       _______,  _______),
     [LAYER_FUNCTIONS] = LAYOUT_iso_110(
-        QK_BOOT,  KC_BRID,  KC_BRIU,  KC_CPNL,  KC_CALC,  RGB_VAD,  RGB_VAI,  KC_MPRV,  KC_MPLY,  KC_MNXT,  KC_MUTE,  KC_VOLD,  KC_VOLU,   RGB_TOG,    KC_SLEP,  XXXXXXX,  RGB_MOD,    DM_REC1,  DM_REC2,  QK_LOCK,  SD_WAKE,
+        QK_BOOT,  KC_BRID,  KC_BRIU,  KC_WSCH,  KC_CALC,  RGB_VAD,  RGB_VAI,  KC_MPRV,  KC_MPLY,  KC_MNXT,  KC_MUTE,  KC_VOLD,  KC_VOLU,   RGB_TOG,    KC_SLEP,  XXXXXXX,  RGB_MOD,    DM_REC1,  DM_REC2,  QK_LOCK,  SD_WAKE,
         XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,   XXXXXXX,    XXXXXXX,  XXXXXXX,  KC_WH_U,    XXXXXXX,  RGB_RMOD, RGB_MOD,  RGB_SPD,
         RGB_TOG,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,               XXXXXXX,  SD_ULCK,  KC_WH_D,    XXXXXXX,  RGB_HUI,  XXXXXXX,
         CW_TOGG,  XXXXXXX,  XXXXXXX,  DB_TOGG,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,   KC_BTN1,                                    RGB_SAD,  XXXXXXX,  RGB_SAI,  RGB_SPI,
@@ -127,7 +124,7 @@ uint32_t keep_awake(uint32_t trigger_time, void *cb_arg) {
 
 
 bool dip_switch_update_user(uint8_t index, bool active) {
-    if(active)
+    if (active)
     {
       dprint("DIP event: Switching to SPECIAL layer.\n");
       set_single_persistent_default_layer(LAYER_SPECIAL);
@@ -176,7 +173,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 }
 
 bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
-  if(overrideIndicators)
+  if (overrideIndicators)
   {
     return false;
   }
@@ -220,6 +217,14 @@ bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
     }
 
     return false;
+  }
+
+  if (layer <= LAYER_SPECIAL && led_min <= KEEP_AWAKE_LED_INDEX && KEEP_AWAKE_LED_INDEX <= led_max)
+  {
+    if (keep_awake_token != '\0')
+    {
+      rgb_matrix_set_color(KEEP_AWAKE_LED_INDEX, RGB_WHITE);
+    }
   }
 
   return true;
