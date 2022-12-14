@@ -22,8 +22,8 @@
  *       git tag -n3 -l 'sduellberg-v*'
  *
  *       (CREATION)
- *       git tag sduellberg-v3.2 HEAD -m "*MESSAGE*"
- *       git push origin sduellberg-v3.2
+ *       git tag sduellberg-v3.3 HEAD -m "*MESSAGE*"
+ *       git push origin sduellberg-v3.3
  *
  *       (DELETION)
  *       git tag -d sduellberg-vx.x
@@ -202,15 +202,26 @@ bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
 }
 
 layer_state_t layer_state_set_user(layer_state_t state) {
-    switch (get_highest_layer(state)) {
-      case LAYER_FUNCTIONS ... LAYER_MACROS:
-        rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR);
-        rgb_matrix_sethsv_noeeprom(HSV_OFF);
-        break;
-      default: //  for any other layers, or the default layer reactivate rgb effects
-        rgb_matrix_reload_from_eeprom();
-        overrideIndicators=false;
-        break;
-    }
+  switch (get_highest_layer(state)) {
+    case LAYER_FUNCTIONS ... LAYER_MACROS:
+      // disable effect if it is not Heatmap, Splash or React
+      switch(rgb_matrix_get_mode()){
+        case RGB_MATRIX_TYPING_HEATMAP:
+        case RGB_MATRIX_SOLID_REACTIVE_MULTINEXUS:
+        case RGB_MATRIX_SPLASH:
+          break; // leave effect as is
+        default:
+          // temporarily disable effect
+          rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR);
+          rgb_matrix_sethsv_noeeprom(HSV_OFF);
+          break;
+      }
+
+      break;
+    default: // for any other layers, or the default layer reactivate rgb effects
+      rgb_matrix_reload_from_eeprom();
+      overrideIndicators=false;
+      break;
+  }
   return state;
 }
