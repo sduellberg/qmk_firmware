@@ -34,15 +34,13 @@
  *      qmk console -t
  *
  *   TODOs:
- *       - LED override for FN and macro layers (setup colors and fix illuminated keys when toggling the led feature, handle rgb effects hotkeys)
  *       - Map additional (only macro?) layers to numbers and use indicators
+ *          - implement some form of indicator spelling for identification?
  *       - Custom key for "KeepMeAlive" using deferred execution + indicator
  *           (https://docs.qmk.fm/#/custom_quantum_functions?id=deferred-execution)
  *           (https://docs.qmk.fm/#/feature_rgb_matrix?id=indicators)
  *           (https://docs.qmk.fm/#/feature_macros?id=advanced-macros)
  *           (https://docs.qmk.fm/#/feature_macros?id=super-alt%e2%86%aftab)
- *       - Decrease the "spread" of the heatmap effect.
- *          - can the time of the red "hot" state be expanded while increasing the cooldown for the other phases?
  *       - Check if there is an rgb effect for the keyboard going to sleep.
  *           (https://docs.qmk.fm/#/custom_quantum_functions?id=keyboard-idlingwake-code)
  *       - Add functionality for rectangle and cross in default layer.
@@ -51,9 +49,6 @@
  *       - RAW HID companion for additional functionality?
  *           (https://docs.qmk.fm/#/feature_rawhid)
  *       - Indicators and effects for dynamic macros?
- *       - Is it possible to cancel all currently locked keys (QK_LOCK)?
- *          (https://docs.qmk.fm/#/feature_macros?id=clear_keyboard)
- *          END-Key
  *
  */
 
@@ -100,12 +95,12 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [LAYER_FUNCTIONS] = LAYOUT_iso_110(
         QK_BOOT,  KC_BRID,  KC_BRIU,  KC_CPNL,  KC_CALC,  RGB_VAD,  RGB_VAI,  KC_MPRV,  KC_MPLY,  KC_MNXT,  KC_MUTE,  KC_VOLD,  KC_VOLU,   RGB_TOG,    KC_SLEP,  XXXXXXX,  RGB_MOD,    DM_REC1,  DM_REC2,  QK_LOCK,  SD_WAKE,
         XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,   XXXXXXX,    XXXXXXX,  XXXXXXX,  KC_WH_U,    XXXXXXX,  RGB_RMOD, RGB_MOD,  RGB_SPD,
-        RGB_TOG,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,               XXXXXXX,  XXXXXXX,  KC_WH_D,    XXXXXXX,  RGB_HUI,  XXXXXXX,
+        RGB_TOG,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,               XXXXXXX,  SD_ULCK,  KC_WH_D,    XXXXXXX,  RGB_HUI,  XXXXXXX,
         CW_TOGG,  XXXXXXX,  XXXXXXX,  DB_TOGG,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,   KC_BTN1,                                    RGB_SAD,  XXXXXXX,  RGB_SAI,  RGB_SPI,
         XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  NK_TOGG,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,        KC_BTN2,                   KC_MS_U,              XXXXXXX,  RGB_HUD,  XXXXXXX,
         XXXXXXX,  XXXXXXX,  XXXXXXX,                                XXXXXXX,                                XXXXXXX,  XXXXXXX,  XXXXXXX,   XXXXXXX,    KC_MS_L,  KC_MS_D,  KC_MS_R,         XXXXXXX,       RGB_TOG,  XXXXXXX),
     [LAYER_MACROS] = LAYOUT_iso_110(
-        DM_RSTP,  KC_F13,   KC_F14,   KC_F15,   KC_F16,   KC_F17,   KC_F18,   KC_F19,   KC_F20,   KC_F21,   KC_F22,   KC_F23,   KC_F24,    XXXXXXX,    XXXXXXX,  XXXXXXX,  XXXXXXX,    XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,
+        XXXXXXX,  KC_F13,   KC_F14,   KC_F15,   KC_F16,   KC_F17,   KC_F18,   KC_F19,   KC_F20,   KC_F21,   KC_F22,   KC_F23,   KC_F24,    XXXXXXX,    XXXXXXX,  XXXXXXX,  XXXXXXX,    XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,
         XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,   XXXXXXX,    XXXXXXX,  XXXXXXX,  XXXXXXX,    XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,
         XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,               XXXXXXX,  XXXXXXX,  XXXXXXX,    XXXXXXX,  XXXXXXX,  XXXXXXX,
         XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,   XXXXXXX,                                    XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,
@@ -150,7 +145,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     case SD_WAKE:
       if (record->event.pressed)
       {
-        if(keep_awake_token != '\0'){
+        if(keep_awake_token != '\0')
+        {
           // deactivate deferred execution
           dprint("Ending keep_awake.\n");
           cancel_deferred_exec(keep_awake_token);
@@ -170,6 +166,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
           rgb_matrix_reload_from_eeprom(); // undo the temporary setting from layer_state_set_user
         }
         return true;
+      case SD_ULCK:
+        // unlock all keys locked by the QK_LOCK key
+        clear_keyboard();
+        return false;
     default:
       return true; // Process all other keycodes normally
   }
